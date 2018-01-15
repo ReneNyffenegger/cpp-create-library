@@ -2,3 +2,5 @@
 *.exe
 *.o
 *.a
+*.so
+use-shared-object
