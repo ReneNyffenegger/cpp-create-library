@@ -75,3 +75,6 @@ gcc tq84-PIC.o main.o -o statically-linked-PIC
 #
 gcc dlopen.c -ldl -o dlopen
 LD_LIBRARY_PATH=$(pwd) ./dlopen
+
+# Using sonames
+ gcc -shared  tq84-PIC.o -Wl,-soname,libtq84.so.1 -o libtq84.so.1.0.1
