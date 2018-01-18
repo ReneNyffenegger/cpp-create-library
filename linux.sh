@@ -4,6 +4,9 @@ gcc -c       tq84.c -o tq84.o
 objdump --disassemble tq84-PIC.o
 objdump --disassemble tq84.o
 
+readelf --relocs tq84-PIC.o
+readelf --relocs tq84.o
+
 gcc -c       main.c -o main.o
 
 gcc -shared  tq84.o -o libtq84.so
@@ -17,6 +20,12 @@ gcc -shared  tq84-PIC.o -o libtq84.so
 #   -ltq84 needs to be placed AFTER main.c
 gcc -L.  main.c -ltq84 -o use-shared-object
 
+
+#
+#  show required shared libraries of an executable
+#
+ldd ./use-shared-object
+
 #  If the shared object is in a non standard location, we
 #  need to tell where it is via the LD_LIBRARY_PATH
 #  environment variable
@@ -25,6 +34,10 @@ gcc -L.  main.c -ltq84 -o use-shared-object
 #    ./use-shared-object: error while loading shared libraries: libtq84.so: cannot open shared object file: No such file or directory
 
 LD_LIBRARY_PATH=$(pwd) ./use-shared-object
+
+sudo mv libtq84.so /usr/lib
+sudo chmod 755 /usr/lib/libtq84.so
+./use-shared-object
 
 #
 #  Use LD_DEBUG
