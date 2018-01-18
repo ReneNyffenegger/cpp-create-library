@@ -4,3 +4,5 @@
 *.a
 *.so
 use-shared-object
+statically-linked*
+dlopen

@@ -1,4 +1,10 @@
 
-double mean(double a, double b) {
-  return (a+b) / 2;
+int gSummand;
+
+void setSummand(int summand) {
+  gSummand = summand;
+}
+
+int add(int summand) {
+  return gSummand + summand;
 }

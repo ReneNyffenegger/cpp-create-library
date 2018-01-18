@@ -1,2 +1,3 @@
 
-double mean(double a, double b);
+void setSummand(int summand);
+int  add(int summand);
