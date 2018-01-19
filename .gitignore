@@ -1,9 +1,4 @@
 *.swp
-*.exe
-*.dll
-*.o
-*.a
-*.so
 use-shared-object
 statically-linked*
 dlopen
