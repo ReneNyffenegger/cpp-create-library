@@ -1,11 +1,14 @@
 gcc -c -fPIC tq84.c -o bin/tq84-PIC.o
 gcc -c       tq84.c -o bin/tq84.o
 
-objdump --disassemble tq84-PIC.o
-objdump --disassemble tq84.o
+#
+#  Show difference in 
+#
+objdump --disassemble bin/tq84-PIC.o | sed -n '/<add>/,/^$/p'
+objdump --disassemble bin/tq84.o     | sed -n '/<add>/,/^$/p'
 
-readelf --relocs tq84-PIC.o
-readelf --relocs tq84.o
+readelf --relocs bin/tq84-PIC.o
+readelf --relocs bin/tq84.o
 
 gcc -c       main.c -o bin/main.o
 
@@ -18,7 +21,7 @@ gcc -shared  bin/tq84-PIC.o -o bin/libtq84.so
 
 # Note the order:
 #   -ltq84 needs to be placed AFTER main.c
-gcc -Lbin  bin/main.c -ltq84 -o bin/use-shared-object
+gcc -Lbin main.c -ltq84 -o bin/use-shared-object
 
 
 #
@@ -114,3 +117,14 @@ sudo ldconfig -v -n /usr/lib
 ls -ltr /usr/lib
 
 gcc main.c -ltq84Soname.1 -o bin/use-shared-library-soname-2
+
+
+#
+#  TODO
+#
+#  List symbols in object files
+#
+nm bin/tq84.0
+nm bin/libtq84Soname.so
+nm bin/statically-linked
+nm bin/statically-linked-PIC
