@@ -5,7 +5,6 @@
 #
 #  Show difference between PIC and in function add
 #
-. show-difference-PIC
 
 . link-statically
 
@@ -18,7 +17,6 @@
 . move-shared-object
 
 . use-shared-library-no-LD_LIBRARY_PATH
-
 
 
 
@@ -41,16 +39,6 @@ bin/use-shared-object
 
 . LD_DEBUG
 
+. show-difference-PIC
+
 . readelf-relocs
-
-
-#
-#  TODO
-#
-#  List symbols in object files
-#
-nm bin/tq84.0
-nm bin/libtq84Soname.so
-nm bin/statically-linked
-nm bin/statically-linked-PIC
-
