@@ -30,38 +30,18 @@ bin/use-shared-object
 
 . create-dlopen
 
-. LD_DEBUG
+. create-soname-library
 
-. readelf-relocs
-
-
-
-
-
-#
-#  Using sonames
-#
-gcc -shared  bin/tq84-PIC.o -Wl,-soname,libtq84Soname.so.1 -o bin/libtq84Soname.so.1.0.1
-gcc -Lbin   main.c -ltq84Soname -o bin/use-shared-library-soname
-
-ln -s libtq84Soname.so.1.0.1 bin/libtq84Soname.so
-gcc -Lbin   main.c -ltq84Soname -o bin/use-shared-library-soname
-
-
+. link-soname-library
 
 #
 #  Installing the library
 #
-sudo cp bin/libtq84Soname.so.1.0.1 /usr/lib
-sudo ldconfig -v -n /usr/lib
+. install-soname-library
 
-#
-#   ldconfig created a symbolic link from /usr/lib/libtq84Soname.so.1 to
-#   /usr/lib/libtq84Soname.so.1.0.1
-#
-ls -ltr /usr/lib
+. LD_DEBUG
 
-gcc main.c -ltq84Soname.1 -o bin/use-shared-library-soname-2
+. readelf-relocs
 
 
 #
