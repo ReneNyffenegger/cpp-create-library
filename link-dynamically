@@ -1,0 +1,3 @@
+# Note the order:
+#   -ltq84 needs to be placed AFTER main.c
+gcc -Lbin main.c -ltq84 -o bin/use-shared-object

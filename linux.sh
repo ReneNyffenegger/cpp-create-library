@@ -1,48 +1,26 @@
-gcc -c -fPIC tq84.c -o bin/tq84-PIC.o
-gcc -c       tq84.c -o bin/tq84.o
+. object-files
+
+. link-statically
 
 #
-#  Show difference in 
+#  Show difference between PIC and in function add
 #
-objdump --disassemble bin/tq84-PIC.o | sed -n '/<add>/,/^$/p'
-objdump --disassemble bin/tq84.o     | sed -n '/<add>/,/^$/p'
+. show-difference-PIC
 
-readelf --relocs bin/tq84-PIC.o
-readelf --relocs bin/tq84.o
+. link-statically
 
-gcc -c       main.c -o bin/main.o
+. shared-library
 
-gcc -shared  bin/tq84.o -o bin/libtq84.so
-#
-#    /usr/bin/ld: bin/tq84.o: relocation R_X86_64_PC32 against symbol `gSummand' can not be used when making a shared object; recompile with -fPIC
-#
-gcc -shared  bin/tq84-PIC.o -o bin/libtq84.so
+. link-dynamically
 
+. use-shared-library-LD_LIBRARY_PATH
 
-# Note the order:
-#   -ltq84 needs to be placed AFTER main.c
-gcc -Lbin main.c -ltq84 -o bin/use-shared-object
+. move-shared-object
+
+. use-shared-library-no-LD_LIBRARY_PATH
 
 
-#
-#  show required shared libraries of an executable
-#
-ldd bin/use-shared-object
 
-#  If the shared object is in a non standard location, we
-#  need to tell where it is via the LD_LIBRARY_PATH
-#  environment variable
-#
-# ./use-shared-object
-#    ./use-shared-object: error while loading shared libraries: libtq84.so: cannot open shared object file: No such file or directory
-
-LD_LIBRARY_PATH=$(pwd)/bin bin/use-shared-object
-
-#
-#   Moving the shared object to a standard location
-#
-sudo mv bin/libtq84.so /usr/lib
-sudo chmod 755 /usr/lib/libtq84.so
 
 #
 #  After moving the shared object to /usr/lib, the executable
@@ -50,48 +28,15 @@ sudo chmod 755 /usr/lib/libtq84.so
 #
 bin/use-shared-object
 
-#
-#  Use LD_DEBUG
-#    set it to libs to display library search paths
-#
-LD_LIBRARY_PATH=$(pwd)/bin LD_DEBUG=libs bin/use-shared-object
+. create-dlopen
 
-#
-#  Setting LD_DEBUG to files to display progress for input files
-#
-LD_LIBRARY_PATH=$(pwd)/bin LD_DEBUG=files bin/use-shared-object
+. LD_DEBUG
 
-#
-#  Setting LD_DEBUG to reloc to display relocation processing
-#
-LD_LIBRARY_PATH=$(pwd)/bin LD_DEBUG=reloc bin/use-shared-object
-
-LD_LIBRARY_PATH=$(pwd)/bin LD_DEBUG=symbols bin/use-shared-object
-
-#  Removing the shared object so as to prove that it
-#  is essential:
-#  rm libtq84.so
-#  LD_LIBRARY_PATH=$(pwd) ./use-shared-object
-#    ./use-shared-object: error while loading shared libraries: libtq84.so: cannot open shared object file: No such file or directory
+. readelf-relocs
 
 
-#
-
-gcc bin/tq84.o     bin/main.o -o bin/statically-linked
-gcc bin/tq84-PIC.o bin/main.o -o bin/statically-linked-PIC
 
 
-#
-# Using dl functions
-#
-gcc dlopen.c -ldl -o bin/dlopen
-
-#
-#  As long as /usr/lib/libtq84.so exists, LD_LIBRARY_PATH
-#  needs not be set
-#
-bin/dlopen
-LD_LIBRARY_PATH=$(pwd) bin/dlopen
 
 #
 #  Using sonames
@@ -128,3 +73,4 @@ nm bin/tq84.0
 nm bin/libtq84Soname.so
 nm bin/statically-linked
 nm bin/statically-linked-PIC
+

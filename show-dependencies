@@ -1,0 +1,4 @@
+#
+#  show required shared libraries of an executable
+#
+ldd bin/use-shared-object
